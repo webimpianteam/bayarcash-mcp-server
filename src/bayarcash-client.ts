@@ -94,10 +94,9 @@ export class BayarcashClient {
   }
 
   /**
-   * Get payment channels (hardcoded list)
+   * Get payment channels
    */
   async getChannels(portalKey?: string): Promise<PaymentChannel[]> {
-    // Return hardcoded list of common payment channels
     return [
       { id: '1', name: 'FPX', code: 'fpx' },
       { id: '2', name: 'DuitNow', code: 'duitnow' },
