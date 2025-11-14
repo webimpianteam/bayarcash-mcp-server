@@ -132,6 +132,8 @@ The AI will ask: "Filter by email from last payment: test@example.com?"
 "What's the total revenue from FPX this week?"
 ```
 
+For more detailed examples and workflows, see **[USAGE.md](USAGE.md)**.
+
 ## Troubleshooting
 
 **Server not connecting?**
