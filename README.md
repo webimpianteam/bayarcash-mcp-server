@@ -40,7 +40,8 @@ Talk to your AI naturally:
 **Create Payments:**
 ```
 "Create a payment for RM 100 for order ORD-001"
-"Generate payment link for john@example.com using FPX"
+"Generate payment link for john@example.com using channel ID 1"
+"First show me payment channels, then create payment with channel 2"
 ```
 
 **Check Transactions:**

@@ -30,7 +30,7 @@ export default function createServer({ config }: { config: z.infer<typeof config
   // Tool: Create payment intent
   server.tool(
     'create_payment_intent',
-    'Create a new payment intent for processing payments through Bayarcash. Returns payment URL and order details. Defaults to FPX (online banking) if no payment channel is specified.',
+    'Create a new payment intent for processing payments through Bayarcash. Returns payment URL and order details. Defaults to channel ID 1 (FPX online banking) if not specified.',
     {
       order_number: z.string().describe('Unique order number for this payment. Must be unique across all transactions. Example: ORD-001'),
       amount: z.number().positive().describe('Payment amount in Malaysian Ringgit (MYR). Must be positive. Example: 100.50 for RM100.50'),
@@ -38,10 +38,10 @@ export default function createServer({ config }: { config: z.infer<typeof config
       payer_name: z.string().min(1).describe('Full name of the payer. Required for transaction records.'),
       description: z.string().min(1).describe('Description of what the payment is for. Shown to customer during payment.'),
       portal_key: z.string().describe('Portal key from your Bayarcash account. Identifies which payment portal to use.'),
-      payment_channel: z.string().default('fpx').optional().describe('Payment channel code. Defaults to "fpx" (Online Banking). Other options: duitnow, boost, grabpay, tng, shopeepay. Use get_payment_channels to see all available channels.'),
-      payment_optional: z.boolean().optional().describe('Set to true if payment amount can be changed by customer. Defaults to false.')
+      payment_channel: z.number().int().positive().default(1).optional().describe('Payment channel ID (integer). Defaults to 1 (FPX - Online Banking). Use get_payment_channels to see all available channel IDs and names.'),
+      payer_telephone_number: z.number().int().positive().optional().describe('Payer phone number (integer, Malaysia numbers only). Optional. Example: 60123456789 for +60 12-345 6789')
     },
-    async ({ order_number, amount, payer_email, payer_name, description, portal_key, payment_channel, payment_optional }) => {
+    async ({ order_number, amount, payer_email, payer_name, description, portal_key, payment_channel, payer_telephone_number }) => {
       const result = await bayarcash.createPaymentIntent({
         order_number,
         amount,
@@ -50,7 +50,7 @@ export default function createServer({ config }: { config: z.infer<typeof config
         description,
         portal_key,
         payment_channel,
-        payment_optional
+        payer_telephone_number
       });
       return {
         content: [{ type: 'text', text: JSON.stringify(result, null, 2) }]
@@ -265,7 +265,7 @@ export default function createServer({ config }: { config: z.infer<typeof config
           role: 'user',
           content: {
             type: 'text',
-            text: 'First check my available payment portals and channels. Then create a test payment intent for RM 10.00 using FPX payment channel. Use order number TEST-001, email test@example.com, name Test User, and description "Test payment".'
+            text: 'First check my available payment portals and channels. Then create a test payment intent for RM 10.00 using payment channel ID "1" (FPX). Use order number TEST-001, email test@example.com, name Test User, and description "Test payment".'
           }
         }]
       };

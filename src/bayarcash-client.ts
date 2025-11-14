@@ -33,8 +33,8 @@ export interface PaymentIntent {
   payer_name: string;
   description: string;
   portal_key: string;
-  payment_channel?: string;
-  payment_optional?: boolean;
+  payment_channel?: number;
+  payer_telephone_number?: number;
   checksum?: string;
 }
 

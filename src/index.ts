@@ -81,12 +81,12 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
               description: 'Portal key for the payment gateway'
             },
             payment_channel: {
-              type: 'string',
-              description: 'Payment channel code (e.g., fpx, duitnow, boost, grabpay). HIGHLY RECOMMENDED. If not provided, ask user to choose from available channels using get_payment_channels.'
+              type: 'number',
+              description: 'Payment channel ID (integer). Use get_payment_channels to see available IDs. Defaults to 1 (FPX) if not provided.'
             },
-            payment_optional: {
-              type: 'boolean',
-              description: 'Whether payment is optional'
+            payer_telephone_number: {
+              type: 'number',
+              description: 'Payer phone number (integer, Malaysia numbers only). Example: 60123456789'
             }
           },
           required: ['order_number', 'amount', 'payer_email', 'payer_name', 'description', 'portal_key']
@@ -274,8 +274,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           payer_name: args.payer_name as string,
           description: args.description as string,
           portal_key: args.portal_key as string,
-          payment_channel: args.payment_channel as string | undefined,
-          payment_optional: args.payment_optional as boolean | undefined
+          payment_channel: args.payment_channel as number | undefined,
+          payer_telephone_number: args.payer_telephone_number as number | undefined
         });
         return {
           content: [
