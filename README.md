@@ -36,14 +36,14 @@ A Model Context Protocol (MCP) server for Bayarcash payment gateway integration.
 
 **Mac/Linux:**
 ```bash
-git clone https://github.com/webimpian/bayarcash-mcp-server.git
+git clone https://github.com/khairulimran-97/bayarcash-mcp-server.git
 cd bayarcash-mcp-server
 ./install.sh
 ```
 
 **Windows:**
 ```powershell
-git clone https://github.com/webimpian/bayarcash-mcp-server.git
+git clone https://github.com/khairulimran-97/bayarcash-mcp-server.git
 cd bayarcash-mcp-server
 .\install.ps1
 ```

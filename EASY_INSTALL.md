@@ -66,13 +66,13 @@ sudo dnf install nodejs npm
 ### Option A: Using Git (if you have it)
 
 ```bash
-git clone https://github.com/webimpian/bayarcash-mcp-server.git
+git clone https://github.com/khairulimran-97/bayarcash-mcp-server.git
 cd bayarcash-mcp-server
 ```
 
 ### Option B: Download ZIP
 
-1. Go to https://github.com/webimpian/bayarcash-mcp-server
+1. Go to https://github.com/khairulimran-97/bayarcash-mcp-server
 2. Click the green "Code" button
 3. Click "Download ZIP"
 4. Unzip the file to your preferred location
@@ -253,7 +253,7 @@ chmod +x install.sh
    - [INSTALL.md](INSTALL.md) - Detailed installation guide
 
 2. **Ask on GitHub:**
-   - https://github.com/webimpian/bayarcash-mcp-server/issues
+   - https://github.com/khairulimran-97/bayarcash-mcp-server/issues
 
 3. **Contact Bayarcash:**
    - For API issues: https://bayar.cash

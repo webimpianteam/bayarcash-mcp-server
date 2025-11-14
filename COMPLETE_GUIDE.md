@@ -85,14 +85,14 @@ Interactive wizard that asks questions and sets everything up.
 
 **Mac/Linux:**
 ```bash
-git clone https://github.com/webimpian/bayarcash-mcp-server.git
+git clone https://github.com/khairulimran-97/bayarcash-mcp-server.git
 cd bayarcash-mcp-server
 ./install.sh
 ```
 
 **Windows:**
 ```powershell
-git clone https://github.com/webimpian/bayarcash-mcp-server.git
+git clone https://github.com/khairulimran-97/bayarcash-mcp-server.git
 cd bayarcash-mcp-server
 .\install.ps1
 ```
@@ -504,6 +504,6 @@ BAYARCASH_API_VERSION=v3
 
 **Ready to get started?** → [EASY_INSTALL.md](EASY_INSTALL.md)
 
-**Questions?** → [Open an issue](https://github.com/webimpian/bayarcash-mcp-server/issues)
+**Questions?** → [Open an issue](https://github.com/khairulimran-97/bayarcash-mcp-server/issues)
 
 **Happy automating!** 🚀

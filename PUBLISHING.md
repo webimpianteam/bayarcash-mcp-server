@@ -98,7 +98,7 @@ Smithery is a marketplace for MCP servers with easy installation.
      "description": "MCP server for Bayarcash payment gateway integration",
      "version": "1.0.0",
      "author": "Webimpian",
-     "repository": "https://github.com/webimpian/bayarcash-mcp-server",
+     "repository": "https://github.com/khairulimran-97/bayarcash-mcp-server",
      "license": "MIT",
      "category": "payments",
      "tags": ["payments", "bayarcash", "gateway", "fpx", "malaysia"],
@@ -214,7 +214,7 @@ Publish to GitHub's official MCP registry for discoverability.
      "description": "MCP server for Bayarcash payment gateway",
      "version": "1.0.0",
      "author": "Webimpian",
-     "homepage": "https://github.com/webimpian/bayarcash-mcp-server",
+     "homepage": "https://github.com/khairulimran-97/bayarcash-mcp-server",
      "categories": ["payments", "finance"],
      "installation": {
        "type": "npm",
