@@ -136,7 +136,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       },
       {
         name: 'list_transactions',
-        description: 'List all transactions with optional filters',
+        description: 'List all transactions with optional filters. If you have payer_email from previous payment creation, ask user: "Filter by email from last payment: {email}?"',
         inputSchema: {
           type: 'object',
           properties: {
@@ -150,7 +150,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
             },
             payer_email: {
               type: 'string',
-              description: 'Filter by payer email'
+              description: 'Filter by payer email. If you stored email from previous create_payment_intent, ask user if they want to filter by it.'
             },
             order_number: {
               type: 'string',
