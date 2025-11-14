@@ -207,39 +207,48 @@ export default function createServer({ config }: { config: z.infer<typeof config
 
   // Resource: Portals
   server.resource(
+    'portals',
     'bayarcash://portals',
-    'Available Payment Portals - List of all available payment portals and their configurations',
     async () => {
       const portals = await bayarcash.getPortals();
       return {
-        text: JSON.stringify(portals, null, 2),
-        mimeType: 'application/json'
+        contents: [{
+          uri: 'bayarcash://portals',
+          text: JSON.stringify(portals, null, 2),
+          mimeType: 'application/json'
+        }]
       };
     }
   );
 
   // Resource: Channels
   server.resource(
+    'channels',
     'bayarcash://channels',
-    'Payment Channels - List of all available payment channels across all portals',
     async () => {
       const channels = await bayarcash.getChannels();
       return {
-        text: JSON.stringify(channels, null, 2),
-        mimeType: 'application/json'
+        contents: [{
+          uri: 'bayarcash://channels',
+          text: JSON.stringify(channels, null, 2),
+          mimeType: 'application/json'
+        }]
       };
     }
   );
 
   // Resource: FPX Banks
   server.resource(
+    'fpx-banks',
     'bayarcash://fpx-banks',
-    'FPX Banks - List of FPX banks available for online banking payments',
     async () => {
       const banks = await bayarcash.getFpxBanksList();
       return {
-        text: JSON.stringify(banks, null, 2),
-        mimeType: 'application/json'
+        contents: [{
+          uri: 'bayarcash://fpx-banks',
+          text: JSON.stringify(banks, null, 2),
+          mimeType: 'application/json'
+        }]
       };
     }
   );
