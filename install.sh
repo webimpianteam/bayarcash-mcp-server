@@ -72,10 +72,11 @@ echo ""
 # Prompt for AI client
 echo "Which AI client do you want to configure?"
 echo "  1) Claude Desktop (Recommended)"
-echo "  2) Cursor"
-echo "  3) Skip configuration (I'll do it manually)"
+echo "  2) Claude Code"
+echo "  3) Cursor"
+echo "  4) Skip configuration (I'll do it manually)"
 echo ""
-read -p "Enter your choice (1-3): " CLIENT_CHOICE
+read -p "Enter your choice (1-4): " CLIENT_CHOICE
 
 # Prompt for credentials
 echo ""
@@ -172,6 +173,60 @@ EOF
         ;;
 
     2)
+        # Claude Code
+        if [ "$PLATFORM" = "Mac" ]; then
+            CONFIG_DIR="$HOME/.config/claude-code"
+        elif [ "$PLATFORM" = "Linux" ]; then
+            CONFIG_DIR="$HOME/.config/claude-code"
+        else
+            print_warning "Windows path may vary. Default: %APPDATA%/claude-code"
+            CONFIG_DIR="$APPDATA/claude-code"
+        fi
+
+        CONFIG_FILE="$CONFIG_DIR/mcp_settings.json"
+
+        echo ""
+        print_info "Configuring Claude Code..."
+
+        # Create directory if it doesn't exist
+        mkdir -p "$CONFIG_DIR"
+
+        # Check if config exists
+        if [ -f "$CONFIG_FILE" ]; then
+            print_warning "Config file already exists at: $CONFIG_FILE"
+            read -p "Backup existing config and create new one? [Y/n]: " BACKUP
+            BACKUP=${BACKUP:-Y}
+
+            if [[ "$BACKUP" =~ ^[Yy]$ ]]; then
+                cp "$CONFIG_FILE" "$CONFIG_FILE.backup.$(date +%Y%m%d_%H%M%S)"
+                print_success "Backup created"
+            fi
+        fi
+
+        # Create config
+        cat > "$CONFIG_FILE" << EOF
+{
+  "mcpServers": {
+    "bayarcash": {
+      "command": "node",
+      "args": ["$SCRIPT_DIR/build/index.js"],
+      "env": {
+        "BAYARCASH_API_TOKEN": "$API_TOKEN",
+        "BAYARCASH_API_SECRET_KEY": "$API_SECRET_KEY",
+        "BAYARCASH_SANDBOX": "$SANDBOX",
+        "BAYARCASH_API_VERSION": "$API_VERSION"
+      }
+    }
+  }
+}
+EOF
+
+        print_success "Claude Code configured!"
+        print_info "Config saved to: $CONFIG_FILE"
+        print_warning "Restart your terminal/Claude Code session to apply changes"
+        ;;
+
+    3)
         # Cursor
         CONFIG_FILE=".cursor/mcp.json"
 
@@ -202,7 +257,7 @@ EOF
         print_warning "Copy this file to your project's .cursor directory"
         ;;
 
-    3)
+    4)
         print_info "Skipping automatic configuration"
         echo ""
         echo "Manual configuration:"
