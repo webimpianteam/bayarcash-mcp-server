@@ -61,10 +61,20 @@ export class BayarcashClient {
     this.apiSecretKey = config.apiSecretKey;
     this.apiVersion = config.apiVersion || 'v3';
 
+    // Set base URL based on sandbox mode and API version
     const sandbox = config.useSandbox !== false; // Default to sandbox
-    this.baseUrl = sandbox
-      ? `https://console.bayar.cash/api/${this.apiVersion}`
-      : `https://console.bayar.cash/api/${this.apiVersion}`;
+
+    if (sandbox) {
+      // Sandbox URLs
+      this.baseUrl = this.apiVersion === 'v3'
+        ? 'https://api.console.bayarcash-sandbox.com/v3'
+        : 'https://console.bayarcash-sandbox.com/api/v2';
+    } else {
+      // Production URLs
+      this.baseUrl = this.apiVersion === 'v3'
+        ? 'https://api.console.bayar.cash/v3'
+        : 'https://console.bayar.cash/api/v2';
+    }
 
     this.axiosInstance = axios.create({
       baseURL: this.baseUrl,
