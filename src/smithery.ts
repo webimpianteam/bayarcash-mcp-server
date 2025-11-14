@@ -253,5 +253,54 @@ export default function createServer({ config }: { config: z.infer<typeof config
     }
   );
 
+  // Add prompts for common workflows
+  server.prompt(
+    'create-test-payment',
+    'Create a test payment in sandbox',
+    async () => {
+      return {
+        messages: [{
+          role: 'user',
+          content: {
+            type: 'text',
+            text: 'Create a test payment intent for RM 10.00 in sandbox mode. Use order number TEST-001, email test@example.com, name Test User, and description "Test payment".'
+          }
+        }]
+      };
+    }
+  );
+
+  server.prompt(
+    'check-portals',
+    'View available payment portals and channels',
+    async () => {
+      return {
+        messages: [{
+          role: 'user',
+          content: {
+            type: 'text',
+            text: 'Show me all available payment portals and their supported payment channels.'
+          }
+        }]
+      };
+    }
+  );
+
+  server.prompt(
+    'list-fpx-banks',
+    'View FPX banks for online banking',
+    async () => {
+      return {
+        messages: [{
+          role: 'user',
+          content: {
+            type: 'text',
+            text: 'List all available FPX banks for online banking payments.'
+          }
+        }]
+      };
+    }
+  );
+
   return server.server;
 }

@@ -1,5 +1,11 @@
 runtime: typescript
 
+# Server metadata
+name: Bayarcash Payment Gateway
+description: MCP server for Bayarcash payment gateway integration supporting FPX, e-wallets, and online banking
+icon: 💳
+homepage: https://github.com/khairulimran-97/bayarcash-mcp-server
+
 env:
   BAYARCASH_API_TOKEN: ""
   BAYARCASH_API_SECRET_KEY: ""
