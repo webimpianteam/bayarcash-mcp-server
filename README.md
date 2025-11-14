@@ -7,7 +7,13 @@ MCP server for Bayarcash payment gateway. Use AI assistants (Claude, ChatGPT, Cu
 
 ## Quick Install
 
-### Option 1: Automated (Recommended)
+### Option 1: Smithery (Easiest - Coming Soon)
+
+```bash
+npx -y @smithery/cli install @khairulimran-97/bayarcash-mcp-server --client claude
+```
+
+### Option 2: Automated Script
 
 **Mac/Linux:**
 ```bash
@@ -23,18 +29,16 @@ cd bayarcash-mcp-server
 .\install.ps1
 ```
 
-The script will ask for your credentials and configure everything automatically.
+### Option 3: Manual Configuration
 
-### Option 2: NPX (After publishing to NPM)
-
-Add to your AI client config:
+Add to your Claude Code config (`~/.config/claude-code/mcp_settings.json` or similar):
 
 ```json
 {
   "mcpServers": {
     "bayarcash": {
-      "command": "npx",
-      "args": ["-y", "@webimpian/bayarcash-mcp-server"],
+      "command": "node",
+      "args": ["/absolute/path/to/bayarcash-mcp-server/build/index.js"],
       "env": {
         "BAYARCASH_API_TOKEN": "your_token",
         "BAYARCASH_API_SECRET_KEY": "your_secret",
@@ -97,30 +101,48 @@ Once installed, talk to your AI assistant:
 
 ## Using with Claude Code
 
-If you're using Claude Code (AI coding assistant), the MCP server helps you:
+### Setup for Claude Code
 
-### Build Laravel/Node.js Integrations
+1. **Install the MCP server** (using any option above)
+2. **Configure** - The automated installer does this automatically
+3. **Restart** - Restart Claude Code/terminal completely
+4. **Test** - Ask: "Can you check my Bayarcash portals?"
+
+### What You Can Do
+
+**Build Integrations:**
 ```
 "Help me integrate Bayarcash in Laravel. Check my account setup first."
 ```
 
 Claude Code will:
-- Check YOUR actual portals and channels via MCP
+- Access YOUR real Bayarcash account via MCP
+- See YOUR actual portals and payment channels
 - Create code specific to YOUR setup
-- No generic documentation needed!
+- No documentation reading needed!
 
-### Test & Debug
+**Test & Debug:**
 ```
 "Create a test payment for RM 10"
 "Check the status of order #ABC-123"
-"List failed transactions"
+"List failed transactions from today"
+"Verify this webhook callback: [paste data]"
 ```
 
-### Monitor Production
+**Monitor & Analyze:**
 ```
 "Show me all successful payments today"
 "What's the total revenue from FPX this week?"
+"List all pending transactions"
 ```
+
+### Benefits
+
+- ✅ No manual documentation reading
+- ✅ Uses YOUR actual account data
+- ✅ Test payments instantly
+- ✅ Debug issues faster
+- ✅ Generate integration code automatically
 
 ## Manual Installation
 

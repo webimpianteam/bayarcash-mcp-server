@@ -1,52 +1,7 @@
-name: bayarcash-mcp-server
-displayName: Bayarcash Payment Gateway
-description: MCP server for Bayarcash payment gateway integration supporting payments, transactions, and FPX Direct Debit
-version: 1.0.0
-author: Webimpian
-repository: https://github.com/khairulimran-97/bayarcash-mcp-server
-license: MIT
-category: payments
-tags:
-  - payments
-  - bayarcash
-  - gateway
-  - fpx
-  - malaysia
-  - e-wallet
-  - online-banking
+runtime: typescript
 
-# Configuration schema for users
-configSchema:
-  type: object
-  properties:
-    apiToken:
-      type: string
-      title: API Token
-      description: Your Bayarcash API Token from console.bayar.cash
-      required: true
-    apiSecretKey:
-      type: string
-      title: API Secret Key
-      description: Your Bayarcash API Secret Key
-      secret: true
-      required: true
-    useSandbox:
-      type: boolean
-      title: Use Sandbox Mode
-      description: Enable sandbox mode for testing (recommended)
-      default: true
-    apiVersion:
-      type: string
-      title: API Version
-      description: Bayarcash API version to use
-      enum:
-        - v2
-        - v3
-      default: v3
-
-# Environment variable mapping
 env:
-  BAYARCASH_API_TOKEN: ${apiToken}
-  BAYARCASH_API_SECRET_KEY: ${apiSecretKey}
-  BAYARCASH_SANDBOX: ${useSandbox}
-  BAYARCASH_API_VERSION: ${apiVersion}
+  BAYARCASH_API_TOKEN: ""
+  BAYARCASH_API_SECRET_KEY: ""
+  BAYARCASH_SANDBOX: "true"
+  BAYARCASH_API_VERSION: "v3"
