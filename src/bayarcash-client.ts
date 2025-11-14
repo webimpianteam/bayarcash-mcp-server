@@ -38,14 +38,33 @@ export interface PaymentIntent {
 
 export interface Transaction {
   id: string;
+  updated_at: string;
+  datetime: string;
   order_number: string;
-  amount: number;
-  status: number; // Status code: 0=New, 1=Pending, 2=Failed, 3=Success, 4=Cancelled
-  payer_email: string;
   payer_name: string;
-  payment_channel: number; // Payment channel ID: 1=FPX, 2=DuitNow, 3=Boost, etc.
-  reference_number?: string;
-  created_at: string;
+  payer_email: string;
+  payer_telephone_number?: string;
+  currency: string;
+  amount: number;
+  exchange_reference_number?: string;
+  exchange_transaction_id?: string;
+  payer_bank_name?: string;
+  status: number; // Status code: 0=New, 1=Pending, 2=Failed, 3=Success, 4=Cancelled
+  status_description: string;
+  return_url?: string;
+  metadata?: any;
+  payout?: {
+    reference_number: string;
+  };
+  payment_gateway?: {
+    name: string;
+    code: string;
+  };
+  portal?: string;
+  merchant?: {
+    name: string;
+    email: string;
+  };
 }
 
 export class BayarcashClient {
