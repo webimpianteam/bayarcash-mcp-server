@@ -30,7 +30,7 @@ export default function createServer({ config }: { config: z.infer<typeof config
   // Tool: Create payment intent
   server.tool(
     'create_payment_intent',
-    'Create a new payment intent for processing payments through Bayarcash. Returns payment URL and order details. WORKFLOW: If user has NOT provided portal_key, call get_portals first to show list and ask user to select. If user has NOT specified payment channel, call get_payment_channels to show list and ask user to select. If user already provided portal_key and/or payment_channel in their message, use those values directly without asking again.',
+    'Create a new payment intent for processing payments through Bayarcash. Returns payment URL and order details. WORKFLOW: 1) If user has NOT provided portal_key, call get_portals first to show list and ask user to select. 2) If user has NOT specified payment channel, call get_payment_channels to show list and ask user to select. 3) Ask user if they want to provide payer telephone number (optional, Malaysia numbers only). 4) If user already provided portal_key and/or payment_channel in their message, use those values directly without asking again.',
     {
       order_number: z.string().describe('Unique order number for this payment. Must be unique across all transactions. Example: ORD-001'),
       amount: z.number().positive().describe('Payment amount in Malaysian Ringgit (MYR). Must be positive. Example: 100.50 for RM100.50'),
@@ -39,7 +39,7 @@ export default function createServer({ config }: { config: z.infer<typeof config
       description: z.string().min(1).describe('Description of what the payment is for. Shown to customer during payment.'),
       portal_key: z.string().describe('Portal key from the portal selected by user. Get this from get_portals API call.'),
       payment_channel: z.number().int().positive().default(1).optional().describe('Payment channel ID (integer). Get this from user selection after showing get_payment_channels list. Examples: 1=FPX, 2=DuitNow, 3=Boost, 4=GrabPay, 5=TNG, 6=ShopeePay.'),
-      payer_telephone_number: z.number().int().positive().optional().describe('Payer phone number (integer, Malaysia numbers only). Optional. Example: 60123456789 for +60 12-345 6789')
+      payer_telephone_number: z.number().int().positive().optional().describe('Payer phone number (integer, Malaysia numbers only). Ask user: "Would you like to provide a phone number?" If yes, collect the number in format 60123456789 (without spaces or dashes). If no, skip this field.')
     },
     async ({ order_number, amount, payer_email, payer_name, description, portal_key, payment_channel, payer_telephone_number }) => {
       const result = await bayarcash.createPaymentIntent({

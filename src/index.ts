@@ -52,7 +52,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
     tools: [
       {
         name: 'create_payment_intent',
-        description: 'Create a new payment intent for processing payments through Bayarcash. WORKFLOW: If user did not provide portal_key, call get_portals first and ask user to select. If user did not specify payment channel, call get_payment_channels and ask user to select. If user already provided these values, use them directly.',
+        description: 'Create a new payment intent for processing payments through Bayarcash. WORKFLOW: 1) If user did not provide portal_key, call get_portals first and ask user to select. 2) If user did not specify payment channel, call get_payment_channels and ask user to select. 3) Ask user if they want to provide phone number (optional). If user already provided these values, use them directly.',
         inputSchema: {
           type: 'object',
           properties: {
@@ -86,7 +86,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
             },
             payer_telephone_number: {
               type: 'number',
-              description: 'Payer phone number (integer, Malaysia numbers only). Example: 60123456789'
+              description: 'Payer phone number (integer, Malaysia numbers only). Ask user: "Would you like to provide a phone number?" Format: 60123456789'
             }
           },
           required: ['order_number', 'amount', 'payer_email', 'payer_name', 'description', 'portal_key']
