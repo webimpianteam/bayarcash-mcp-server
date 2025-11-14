@@ -1,0 +1,50 @@
+{
+  "name": "@webimpian/bayarcash-mcp-server",
+  "version": "1.0.0",
+  "description": "MCP server for Bayarcash payment gateway integration",
+  "main": "build/index.js",
+  "type": "module",
+  "bin": {
+    "bayarcash-mcp": "build/index.js"
+  },
+  "files": [
+    "build",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "start": "node build/index.js",
+    "dev": "tsc && node build/index.js",
+    "prepare": "npm run build"
+  },
+  "keywords": [
+    "mcp",
+    "bayarcash",
+    "payment-gateway",
+    "api",
+    "model-context-protocol",
+    "claude",
+    "chatgpt",
+    "cursor",
+    "mcp-server"
+  ],
+  "author": "Webimpian",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/webimpian/bayarcash-mcp-server.git"
+  },
+  "bugs": {
+    "url": "https://github.com/webimpian/bayarcash-mcp-server/issues"
+  },
+  "homepage": "https://github.com/webimpian/bayarcash-mcp-server#readme",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4",
+    "axios": "^1.7.9"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "typescript": "^5.7.2"
+  }
+}
