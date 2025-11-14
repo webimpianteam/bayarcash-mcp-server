@@ -33,54 +33,77 @@ Add to your config file (`~/.config/claude-code/mcp_settings.json`):
 
 Get your API credentials from https://console.bayar.cash → Settings → API
 
+For detailed usage examples and workflows, see **[USAGE.md](USAGE.md)**.
+
 ## What You Can Do
 
-Talk to your AI naturally:
+Talk to your AI naturally. The AI will guide you through an intelligent workflow:
 
-**Create Payments:**
+### Smart Payment Creation
 ```
-"Create a payment for RM 100 for order ORD-001"
-"Generate payment link for john@example.com using channel ID 1"
-"First show me payment channels, then create payment with channel 2"
+"Create a payment for RM 100"
 ```
+The AI will automatically:
+1. Ask if you want to use the email from your last payment (if available)
+2. Show your payment portals and ask which one to use
+3. Show payment channels and ask which one to use
+4. Ask if you want to include a phone number (optional)
+5. Create the payment and store the payment intent ID
 
-**Check Transactions:**
+### Quick Payment Checks
 ```
-"Show all transactions today"
-"Check status of order #ORD-12345"
-"List all failed payments this week"
+"Check status of that payment"
+"Show me the payment I just created"
 ```
+The AI uses the stored payment intent ID to check status.
 
-**Manage Setup:**
+### Smart Transaction Filtering
 ```
-"What payment portals do I have?"
-"Show available payment channels"
-"List all FPX banks"
+"Show all transactions"
+```
+The AI will ask: "Filter by email from last payment: test@example.com?"
+
+**More Examples:**
+```
+"Create payment for RM 50 with portal abc123 using FPX"
+"List all successful FPX payments today"
+"Find transactions for customer@example.com"
+"What payment channels are available?"
+"Show me FPX banks"
 ```
 
 ## Features
 
 **8 Tools Available:**
-- `create_payment_intent` - Create payment links with order details
-- `get_payment_intent` - Get payment intent by order number
+- `create_payment_intent` - Create payment with guided workflow
+- `get_payment_intent` - Get payment status by payment intent ID
 - `get_transaction` - Get transaction by ID
 - `get_transaction_by_order` - Find transaction by order number
-- `list_transactions` - List all transactions with filters
+- `list_transactions` - List transactions with smart filtering
 - `get_portals` - List your payment portals
-- `get_payment_channels` - List available payment channels
+- `get_payment_channels` - List available payment channels (10 channels)
 - `get_fpx_banks` - List FPX online banking banks
 
-**Payment Channels Supported:**
-- FPX (Online Banking - 20+ banks)
-- DuitNow (QR payments)
-- E-Wallets (Boost, GrabPay, Touch 'n Go, ShopeePay)
-- Cards (Credit/Debit)
-- BNPL (Buy Now Pay Later)
+**Payment Channels (by ID):**
+1. FPX - Online Banking (20+ banks)
+2. DuitNow - QR payments
+3. Boost - E-wallet
+4. GrabPay - E-wallet
+5. Touch 'n Go - E-wallet
+6. ShopeePay - E-wallet
+7. SPayLater - BNPL
+8. Boost PayFlex - BNPL
+9. QRIS - QR payments
+10. NETS - Card payments
 
-**Built-in Features:**
+**Smart Features:**
+- ✅ Guided payment creation workflow
+- ✅ Auto-suggests email from last payment
+- ✅ Auto-suggests filtering by last payment email
+- ✅ Stores payment intent ID for quick status checks
 - ✅ Sandbox & production environments
-- ✅ API v2 & v3 support
-- ✅ Transaction filtering & pagination
+- ✅ API v3 support
+- ✅ Paginated transaction lists with filters
 
 ## Configuration
 

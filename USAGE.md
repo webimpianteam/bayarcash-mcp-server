@@ -6,27 +6,51 @@ This guide provides examples of how to use the Bayarcash MCP Server with AI assi
 
 ### 1. create_payment_intent
 
-Create a new payment intent for processing payments.
+Create a payment intent with intelligent guided workflow. The AI will automatically:
+1. Ask if you want to reuse email from last payment
+2. Show portals and ask which one to use
+3. Show payment channels and ask which one to use
+4. Ask if you want to include phone number
 
-**Example prompt:**
+**Simple prompt:**
 ```
-Create a payment intent with these details:
+"Create a payment for RM 150"
+```
+
+**Advanced prompt (skip guidance):**
+```
+Create a payment:
 - Order number: ORD-2025-001
 - Amount: RM 150.00
 - Payer email: customer@example.com
 - Payer name: Ahmad Ibrahim
-- Description: Product purchase - Premium Package
-- Portal key: my_portal_key
+- Description: Product purchase
+- Portal key: abc123xyz
+- Payment channel: 1 (FPX)
+- Phone: 60123456789
 ```
+
+**Response includes:**
+- Payment intent ID (e.g., `pi_pGwAaq`)
+- Payment URL
+- Order details
+- AI stores the ID for later status checks
 
 ### 2. get_payment_intent
 
-Retrieve details of a payment intent.
+Get payment intent status by payment intent ID (not order number).
 
 **Example prompt:**
 ```
-Get the payment intent for order number ORD-2025-001
+"Check status of that payment"
+"Get payment intent pi_pGwAaq"
 ```
+
+**Returns:**
+- Payment status (paid/pending/failed)
+- All payment attempts (successful and unsuccessful)
+- Payer details, timestamps
+- Transaction IDs
 
 ### 3. get_transaction
 
@@ -34,8 +58,13 @@ Get transaction details by transaction ID.
 
 **Example prompt:**
 ```
-Get transaction details for transaction ID: txn_abc123
+"Get transaction details for txn_abc123"
 ```
+
+**Returns:**
+- Transaction status and details
+- Payment information
+- Timestamps
 
 ### 4. get_transaction_by_order
 
@@ -43,80 +72,84 @@ Get transaction by order number.
 
 **Example prompt:**
 ```
-Show me the transaction for order ORD-2025-001
+"Show me the transaction for order ORD-2025-001"
 ```
+
+**Returns:**
+- Transaction matching the order number
+- Payment status and details
 
 ### 5. list_transactions
 
-List transactions with various filters.
+List transactions with optional filters. The AI will suggest filtering by email from your last payment.
 
 **Example prompts:**
 ```
-List all successful transactions
-
-Show me all pending transactions
-
-Get transactions for customer@example.com
-
-List transactions paid via FPX
-
-Show me transactions from order ORD-2025-001
+"List all successful transactions"
+"Show me all pending transactions"
+"Get transactions for customer@example.com"
+"List transactions paid via FPX"
 ```
+
+**Smart filtering:**
+When you use list_transactions after creating a payment, the AI will ask:
+```
+"Would you like to filter by the email from your last payment: customer@example.com?"
+```
+
+**Returns:**
+- Paginated list of transactions
+- Pagination metadata (first, last, previous, next page links)
+- Transaction details for each entry
 
 ### 6. get_portals
 
-Get available payment portals.
+Get list of available payment portals. Used during payment creation workflow.
 
 **Example prompt:**
 ```
-Show me all available payment portals
+"Show me all available payment portals"
 ```
+
+**Returns:**
+- List of your payment portals
+- Portal keys and configurations
 
 ### 7. get_payment_channels
 
-Get available payment channels.
+Get list of available payment channels. Used during payment creation workflow.
 
 **Example prompts:**
 ```
-List all payment channels
-
-Show payment channels for portal key: my_portal_key
+"List all payment channels"
+"Show payment channels"
 ```
+
+**Returns 10 channels:**
+1. FPX - Online Banking (20+ banks)
+2. DuitNow - QR payments
+3. Boost - E-wallet
+4. GrabPay - E-wallet
+5. Touch 'n Go - E-wallet
+6. ShopeePay - E-wallet
+7. SPayLater - BNPL
+8. Boost PayFlex - BNPL
+9. QRIS - QR payments
+10. NETS - Card payments
 
 ### 8. get_fpx_banks
 
-Get list of FPX banks.
+Get list of FPX banks for online banking payments.
 
 **Example prompt:**
 ```
-Show me all available FPX banks for online banking
+"Show me all available FPX banks for online banking"
 ```
 
-### 9. verify_callback
-
-Verify webhook callback data.
-
-**Example prompt:**
-```
-Verify this callback:
-Data: {"order_number": "ORD-001", "status": "success", "amount": 100}
-Checksum: abc123def456
-```
-
-### 10. create_fpx_direct_debit_enrollment
-
-Create FPX Direct Debit enrollment.
-
-**Example prompt:**
-```
-Create FPX Direct Debit enrollment:
-- Order: DD-2025-001
-- Email: customer@example.com
-- Name: Siti Aminah
-- Bank code: MBBEMYKL
-- Frequency: monthly
-- Max amount: RM 500
-```
+**Returns:**
+- List of 20+ FPX banks
+- Bank codes and names
+- Active status
 
 ## Resources
 
@@ -133,63 +166,73 @@ Returns the list of FPX banks for online banking.
 
 ## Common Workflows
 
-### Complete Payment Flow
+### Smart Payment Creation Flow
 
-1. **Get available portals and channels:**
-   ```
-   Show me available payment portals and channels
-   ```
+The AI guides you through the entire process:
 
-2. **Create payment intent:**
+1. **Simple request:**
    ```
-   Create a payment for RM 250 for order PAY-001,
-   customer: john@example.com, name: John Tan,
-   description: Monthly subscription, portal: my_portal_key
+   "Create a payment for RM 100"
    ```
 
-3. **Check payment status:**
-   ```
-   Get the transaction status for order PAY-001
-   ```
+2. **AI automatically:**
+   - Asks: "Would you like to use the email from your last payment: test@example.com?"
+   - Shows portals and asks you to select one
+   - Shows payment channels (1-10) and asks you to select
+   - Asks: "Would you like to provide a phone number?"
+   - Creates payment and stores the payment intent ID
 
-### FPX Banking Flow
+3. **Check status quickly:**
+   ```
+   "Check status of that payment"
+   ```
+   The AI uses the stored payment intent ID automatically.
 
-1. **Get FPX banks:**
-   ```
-   List all FPX banks
-   ```
+### Advanced Payment Flow (Skip Guidance)
 
-2. **Create payment with FPX:**
-   ```
-   Create payment intent for RM 100, order FPX-001,
-   email: user@example.com, name: Lee Wei,
-   description: Online purchase
-   ```
+If you provide all details, the AI creates payment immediately:
+
+```
+"Create a payment for RM 250, order PAY-001,
+email: john@example.com, name: John Tan,
+description: Monthly subscription,
+portal: my_portal_key, channel: 1"
+```
 
 ### Transaction Monitoring
 
-**Get successful transactions:**
+**View all transactions with smart filtering:**
 ```
-List all successful transactions from today
+"Show all transactions"
 ```
+AI asks: "Filter by email from last payment: customer@example.com?"
 
-**Filter by email:**
+**Filter by status:**
 ```
-Show all transactions for customer@example.com
+"List all successful transactions"
+"Show pending payments"
 ```
 
 **Filter by payment channel:**
 ```
-List all FPX transactions
+"List all FPX transactions"
+"Show all e-wallet payments"
+```
+
+**Filter by customer:**
+```
+"Show transactions for customer@example.com"
 ```
 
 ## Tips
 
-1. **Always use unique order numbers** - Order numbers should be unique for each transaction
-2. **Amounts in MYR** - All amounts are in Malaysian Ringgit (e.g., 100.50 for RM 100.50)
-3. **Sandbox mode** - Use sandbox mode for testing before going live
-4. **Verify callbacks** - Always verify webhook callbacks using the verify_callback tool
-5. **Check transaction status** - After creating a payment, check the transaction status to confirm payment
+1. **Use simple prompts** - Let the AI guide you through the workflow with "Create a payment for RM 100"
+2. **Payment intent ID is stored** - After creating payment, just say "Check status of that payment"
+3. **Payment channels by ID** - Remember: 1=FPX, 2=DuitNow, 3=Boost, 4=GrabPay, 5=TNG, 6=ShopeePay, etc.
+4. **Always use unique order numbers** - Order numbers must be unique for each transaction
+5. **Amounts in MYR** - All amounts are in Malaysian Ringgit (e.g., 100.50 for RM 100.50)
+6. **Sandbox mode** - Use sandbox mode for testing before going live
+7. **Smart filtering** - The AI remembers your last payment email for easy filtering
 
 ## Error Handling
 
