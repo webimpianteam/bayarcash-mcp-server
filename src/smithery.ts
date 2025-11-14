@@ -30,7 +30,7 @@ export default function createServer({ config }: { config: z.infer<typeof config
   // Tool: Create payment intent
   server.tool(
     'create_payment_intent',
-    'Create a new payment intent for processing payments through Bayarcash. Returns payment URL and order details. IMPORTANT WORKFLOW: 1) First call get_portals to show available portals and ask user which portal to use (user can select by number/index), 2) Then call get_payment_channels to show available payment channels and ask user which channel to use (user can select by number/index). Only proceed after user has selected both portal and payment channel.',
+    'Create a new payment intent for processing payments through Bayarcash. Returns payment URL and order details. WORKFLOW: If user has NOT provided portal_key, call get_portals first to show list and ask user to select. If user has NOT specified payment channel, call get_payment_channels to show list and ask user to select. If user already provided portal_key and/or payment_channel in their message, use those values directly without asking again.',
     {
       order_number: z.string().describe('Unique order number for this payment. Must be unique across all transactions. Example: ORD-001'),
       amount: z.number().positive().describe('Payment amount in Malaysian Ringgit (MYR). Must be positive. Example: 100.50 for RM100.50'),

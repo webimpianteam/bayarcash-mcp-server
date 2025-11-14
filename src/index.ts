@@ -52,7 +52,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
     tools: [
       {
         name: 'create_payment_intent',
-        description: 'Create a new payment intent for processing payments through Bayarcash. WORKFLOW: 1) Call get_portals and ask user to select portal (by number), 2) Call get_payment_channels and ask user to select channel (by number). Then create payment.',
+        description: 'Create a new payment intent for processing payments through Bayarcash. WORKFLOW: If user did not provide portal_key, call get_portals first and ask user to select. If user did not specify payment channel, call get_payment_channels and ask user to select. If user already provided these values, use them directly.',
         inputSchema: {
           type: 'object',
           properties: {
