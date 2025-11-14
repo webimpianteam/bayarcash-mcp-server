@@ -1,6 +1,6 @@
-# Bayarcash MCP Server
+# Bayarcash MCP Server 💳
 
-MCP server for Bayarcash payment gateway. Use AI assistants (Claude, ChatGPT, Cursor) to manage payments, check transactions, and integrate with your apps.
+Use AI to manage Bayarcash payments. Create payment links, check transactions, and integrate payment processing using natural language.
 
 [![smithery badge](https://smithery.ai/badge/@khairulimran-97/bayarcash-mcp-server)](https://smithery.ai/server/@khairulimran-97/bayarcash-mcp-server)
 [![npm version](https://badge.fury.io/js/@webimpian%2Fbayarcash-mcp-server.svg)](https://www.npmjs.com/package/@webimpian/bayarcash-mcp-server)
@@ -8,181 +8,136 @@ MCP server for Bayarcash payment gateway. Use AI assistants (Claude, ChatGPT, Cu
 
 ## Quick Install
 
-### Option 1: Smithery (Easiest - Coming Soon)
-
+**Smithery (Easiest):**
 ```bash
 npx -y @smithery/cli install @khairulimran-97/bayarcash-mcp-server --client claude
 ```
 
-### Option 2: Automated Script
-
-**Mac/Linux:**
-```bash
-git clone https://github.com/khairulimran-97/bayarcash-mcp-server.git
-cd bayarcash-mcp-server
-./install.sh
-```
-
-**Windows:**
-```powershell
-git clone https://github.com/khairulimran-97/bayarcash-mcp-server.git
-cd bayarcash-mcp-server
-.\install.ps1
-```
-
-### Option 3: Manual Configuration
-
-Add to your Claude Code config (`~/.config/claude-code/mcp_settings.json` or similar):
-
+**Manual Setup:**
+Add to your config file (`~/.config/claude-code/mcp_settings.json`):
 ```json
 {
   "mcpServers": {
     "bayarcash": {
       "command": "node",
-      "args": ["/absolute/path/to/bayarcash-mcp-server/build/index.js"],
+      "args": ["/path/to/bayarcash-mcp-server/build/index.js"],
       "env": {
         "BAYARCASH_API_TOKEN": "your_token",
         "BAYARCASH_API_SECRET_KEY": "your_secret",
-        "BAYARCASH_SANDBOX": "true",
-        "BAYARCASH_API_VERSION": "v3"
+        "BAYARCASH_SANDBOX": "true"
       }
     }
   }
 }
 ```
 
-## Configuration
+Get your API credentials from https://console.bayar.cash → Settings → API
 
-### Get API Credentials
-1. Go to https://console.bayar.cash
-2. Navigate to Settings → API
-3. Copy your API Token and Secret Key
+## What You Can Do
 
-### Config File Locations
+Talk to your AI naturally:
 
-**Claude Desktop:**
-- Mac: `~/Library/Application Support/Claude/claude_desktop_config.json`
-- Windows: `%APPDATA%\Claude\claude_desktop_config.json`
-
-**Cursor:** `.cursor/mcp.json`
-
-## What Can You Do?
-
-Once installed, talk to your AI assistant:
-
+**Create Payments:**
 ```
-"Show me available payment portals"
-"Create a payment for RM 100"
-"List all transactions from today"
-"What payment channels are available?"
-"Get status of order #ORD-12345"
+"Create a payment for RM 100 for order ORD-001"
+"Generate payment link for john@example.com using FPX"
+```
+
+**Check Transactions:**
+```
+"Show all transactions today"
+"Check status of order #ORD-12345"
+"List all failed payments this week"
+```
+
+**Manage Setup:**
+```
+"What payment portals do I have?"
+"Show available payment channels"
+"List all FPX banks"
 ```
 
 ## Features
 
-**10 Tools:**
-- Create payment intents
-- Get transactions (by ID, order, status, email, channel)
-- List portals and payment channels
-- Get FPX banks
-- Verify webhook callbacks
-- FPX Direct Debit enrollment
+**10 Tools Available:**
+- `create_payment_intent` - Create payment links with order details
+- `get_payment_intent` - Get payment intent by order number
+- `get_transaction` - Get transaction by ID
+- `get_transaction_by_order` - Find transaction by order number
+- `list_transactions` - List all transactions with filters
+- `get_portals` - List your payment portals
+- `get_payment_channels` - List available payment channels
+- `get_fpx_banks` - List FPX online banking banks
+- `verify_callback` - Verify webhook authenticity
+- `create_fpx_direct_debit_enrollment` - Enroll FPX Direct Debit
 
-**3 Resources:**
-- Payment portals
-- Payment channels
-- FPX banks list
+**Payment Channels Supported:**
+- FPX (Online Banking - 20+ banks)
+- DuitNow (QR payments)
+- E-Wallets (Boost, GrabPay, Touch 'n Go, ShopeePay)
+- Cards (Credit/Debit)
+- BNPL (Buy Now Pay Later)
 
-**Supports:**
-- API v2 and v3
-- Sandbox and production modes
-- 20+ payment channels (FPX, DuitNow, e-wallets, cards, etc.)
-- Automatic checksum generation
-- Webhook verification
+**Built-in Features:**
+- ✅ Sandbox & production environments
+- ✅ Automatic checksum generation
+- ✅ Webhook signature verification
+- ✅ API v2 & v3 support
+- ✅ Transaction filtering & pagination
 
-## Using with Claude Code
+## Configuration
 
-### Setup for Claude Code
+**Environment Variables:**
 
-1. **Install the MCP server** (using any option above)
-2. **Configure** - The automated installer does this automatically
-3. **Restart** - Restart Claude Code/terminal completely
-4. **Test** - Ask: "Can you check my Bayarcash portals?"
+| Variable | Required | Default |
+|----------|----------|---------|
+| `BAYARCASH_API_TOKEN` | Yes | - |
+| `BAYARCASH_API_SECRET_KEY` | Yes | - |
+| `BAYARCASH_SANDBOX` | No | `true` |
+| `BAYARCASH_API_VERSION` | No | `v3` |
 
-### What You Can Do
+## Use Cases
 
-**Build Integrations:**
+**For Developers:**
 ```
-"Help me integrate Bayarcash in Laravel. Check my account setup first."
-```
-
-Claude Code will:
-- Access YOUR real Bayarcash account via MCP
-- See YOUR actual portals and payment channels
-- Create code specific to YOUR setup
-- No documentation reading needed!
-
-**Test & Debug:**
-```
-"Create a test payment for RM 10"
-"Check the status of order #ABC-123"
-"List failed transactions from today"
+"Help me integrate Bayarcash in my Laravel app"
+"Create a test payment for RM 50"
 "Verify this webhook callback: [paste data]"
 ```
 
-**Monitor & Analyze:**
+**For Business:**
 ```
-"Show me all successful payments today"
+"Show all successful payments today"
+"Find transactions for customer@example.com"
 "What's the total revenue from FPX this week?"
-"List all pending transactions"
 ```
-
-### Benefits
-
-- ✅ No manual documentation reading
-- ✅ Uses YOUR actual account data
-- ✅ Test payments instantly
-- ✅ Debug issues faster
-- ✅ Generate integration code automatically
-
-## Manual Installation
-
-See [INSTALL.md](INSTALL.md) for detailed manual setup instructions.
-
-## Development Usage
-
-See [USAGE.md](USAGE.md) for examples of all available tools and commands.
 
 ## Troubleshooting
 
 **Server not connecting?**
 1. Restart your AI client completely
-2. Check API credentials are correct
-3. Verify absolute path in config file
-4. Ensure `npm run build` was successful
+2. Verify API credentials at https://console.bayar.cash
+3. Check config file path is absolute (not relative)
+4. Run `npm run build` in server directory
 
-**API errors?**
-1. Check `BAYARCASH_SANDBOX` setting
-2. Verify credentials at https://console.bayar.cash
-3. Ensure API version is correct (v2 or v3)
+**Authentication errors?**
+- Ensure `BAYARCASH_SANDBOX` matches your account type
+- Verify no extra spaces in API token/secret
+- Try regenerating credentials
 
-## Publishing
-
-To publish to NPM:
-```bash
-npm login
-npm publish --access public
-```
-
-To submit to Smithery marketplace, see their submission guidelines.
-
-## License
-
-MIT - See [LICENSE](LICENSE)
+**Getting HTTP 500 errors?**
+- Make sure `payment_channel` is specified when creating payments
+- Use `get_payment_channels` to see available options
+- FPX is the default if no channel specified
 
 ## Links
 
+- **Smithery:** https://server.smithery.ai/@khairulimran-97/bayarcash-mcp-server
 - **Repository:** https://github.com/khairulimran-97/bayarcash-mcp-server
-- **Issues:** https://github.com/khairulimran-97/bayarcash-mcp-server/issues
 - **Bayarcash:** https://bayar.cash
 - **MCP Docs:** https://modelcontextprotocol.io
+- **Issues:** https://github.com/khairulimran-97/bayarcash-mcp-server/issues
+
+## License
+
+MIT License - See [LICENSE](LICENSE)

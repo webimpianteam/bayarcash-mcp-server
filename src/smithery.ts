@@ -4,10 +4,10 @@ import { BayarcashClient, BayarcashConfig } from './bayarcash-client.js';
 
 // Configuration schema for Smithery
 export const configSchema = z.object({
-  apiToken: z.string().describe('Your Bayarcash API Token from console.bayar.cash'),
-  apiSecretKey: z.string().describe('Your Bayarcash API Secret Key'),
-  useSandbox: z.boolean().default(true).describe('Enable sandbox mode for testing'),
-  apiVersion: z.enum(['v2', 'v3']).default('v3').describe('Bayarcash API version')
+  apiToken: z.string().describe('Your Bayarcash API Token from console.bayar.cash. Required for authentication.'),
+  apiSecretKey: z.string().describe('Your Bayarcash API Secret Key. Used for checksum generation and webhook verification.'),
+  useSandbox: z.boolean().default(true).optional().describe('Enable sandbox mode for testing. Defaults to true. Set to false for production.'),
+  apiVersion: z.enum(['v2', 'v3']).default('v3').optional().describe('Bayarcash API version. v3 is recommended for new integrations.')
 });
 
 export default function createServer({ config }: { config: z.infer<typeof configSchema> }) {
@@ -30,17 +30,18 @@ export default function createServer({ config }: { config: z.infer<typeof config
   // Tool: Create payment intent
   server.tool(
     'create_payment_intent',
-    'Create a new payment intent for processing payments through Bayarcash',
+    'Create a new payment intent for processing payments through Bayarcash. Returns payment URL and order details. Defaults to FPX (online banking) if no payment channel is specified.',
     {
-      order_number: z.string().describe('Unique order number for this payment'),
-      amount: z.number().describe('Payment amount in MYR'),
-      payer_email: z.string().describe('Email address of the payer'),
-      payer_name: z.string().describe('Name of the payer'),
-      description: z.string().describe('Description of the payment'),
-      portal_key: z.string().describe('Portal key for the payment gateway'),
-      payment_optional: z.boolean().optional().describe('Whether payment is optional')
+      order_number: z.string().describe('Unique order number for this payment. Must be unique across all transactions. Example: ORD-001'),
+      amount: z.number().positive().describe('Payment amount in Malaysian Ringgit (MYR). Must be positive. Example: 100.50 for RM100.50'),
+      payer_email: z.string().email().describe('Valid email address of the payer. Used for payment notifications.'),
+      payer_name: z.string().min(1).describe('Full name of the payer. Required for transaction records.'),
+      description: z.string().min(1).describe('Description of what the payment is for. Shown to customer during payment.'),
+      portal_key: z.string().describe('Portal key from your Bayarcash account. Identifies which payment portal to use.'),
+      payment_channel: z.string().default('fpx').optional().describe('Payment channel code. Defaults to "fpx" (Online Banking). Other options: duitnow, boost, grabpay, tng, shopeepay. Use get_payment_channels to see all available channels.'),
+      payment_optional: z.boolean().optional().describe('Set to true if payment amount can be changed by customer. Defaults to false.')
     },
-    async ({ order_number, amount, payer_email, payer_name, description, portal_key, payment_optional }) => {
+    async ({ order_number, amount, payer_email, payer_name, description, portal_key, payment_channel, payment_optional }) => {
       const result = await bayarcash.createPaymentIntent({
         order_number,
         amount,
@@ -48,6 +49,7 @@ export default function createServer({ config }: { config: z.infer<typeof config
         payer_name,
         description,
         portal_key,
+        payment_channel,
         payment_optional
       });
       return {
@@ -104,14 +106,14 @@ export default function createServer({ config }: { config: z.infer<typeof config
   // Tool: List transactions
   server.tool(
     'list_transactions',
-    'List all transactions with optional filters',
+    'List all transactions with optional filters. Returns paginated transaction data.',
     {
-      status: z.string().optional().describe('Filter by transaction status'),
-      payment_channel: z.string().optional().describe('Filter by payment channel'),
-      payer_email: z.string().optional().describe('Filter by payer email'),
-      order_number: z.string().optional().describe('Filter by order number'),
-      page: z.number().optional().describe('Page number for pagination'),
-      per_page: z.number().optional().describe('Number of items per page')
+      status: z.string().optional().describe('Filter by transaction status. Common values: success, pending, failed'),
+      payment_channel: z.string().optional().describe('Filter by payment channel code. Examples: fpx, duitnow, boost, grabpay'),
+      payer_email: z.string().email().optional().describe('Filter by exact payer email address'),
+      order_number: z.string().optional().describe('Filter by exact order number'),
+      page: z.number().positive().optional().describe('Page number for pagination. Defaults to 1'),
+      per_page: z.number().positive().max(100).optional().describe('Number of items per page. Maximum 100. Defaults to 20')
     },
     async (filters) => {
       const result = await bayarcash.getAllTransactions(filters);
@@ -165,10 +167,10 @@ export default function createServer({ config }: { config: z.infer<typeof config
   // Tool: Verify callback
   server.tool(
     'verify_callback',
-    'Verify callback data from Bayarcash webhook',
+    'Verify callback data from Bayarcash webhook. Returns true if checksum is valid, false otherwise.',
     {
-      callback_data: z.record(z.any()).describe('Callback data received from Bayarcash'),
-      checksum: z.string().describe('Checksum received with the callback')
+      callback_data: z.record(z.any()).describe('Callback data object received from Bayarcash webhook. Should contain all callback parameters.'),
+      checksum: z.string().describe('Checksum string received with the callback. Used to verify data authenticity and integrity.')
     },
     async ({ callback_data, checksum }) => {
       const isValid = bayarcash.verifyCallbackData(callback_data, checksum);
@@ -248,6 +250,55 @@ export default function createServer({ config }: { config: z.infer<typeof config
           uri: 'bayarcash://fpx-banks',
           text: JSON.stringify(banks, null, 2),
           mimeType: 'application/json'
+        }]
+      };
+    }
+  );
+
+  // Add prompts for common workflows
+  server.prompt(
+    'create-test-payment',
+    'Create a test payment in sandbox',
+    async () => {
+      return {
+        messages: [{
+          role: 'user',
+          content: {
+            type: 'text',
+            text: 'First check my available payment portals and channels. Then create a test payment intent for RM 10.00 using FPX payment channel. Use order number TEST-001, email test@example.com, name Test User, and description "Test payment".'
+          }
+        }]
+      };
+    }
+  );
+
+  server.prompt(
+    'check-portals',
+    'View available payment portals and channels',
+    async () => {
+      return {
+        messages: [{
+          role: 'user',
+          content: {
+            type: 'text',
+            text: 'Show me all available payment portals and their supported payment channels.'
+          }
+        }]
+      };
+    }
+  );
+
+  server.prompt(
+    'list-fpx-banks',
+    'View FPX banks for online banking',
+    async () => {
+      return {
+        messages: [{
+          role: 'user',
+          content: {
+            type: 'text',
+            text: 'List all available FPX banks for online banking payments.'
+          }
         }]
       };
     }
