@@ -128,10 +128,11 @@ export class BayarcashClient {
   }
 
   /**
-   * Get payment intent by ID or order number
+   * Get payment intent by payment intent ID (API v3 only)
+   * The ID is returned when creating a payment intent (e.g., pi_pGwAaq or trx_z88ymJ)
    */
-  async getPaymentIntent(idOrOrderNumber: string): Promise<any> {
-    const response = await this.axiosInstance.get(`/payment-intents/${idOrOrderNumber}`);
+  async getPaymentIntent(paymentIntentId: string): Promise<any> {
+    const response = await this.axiosInstance.get(`/payment-intents/${paymentIntentId}`);
     return response.data;
   }
 
@@ -144,19 +145,20 @@ export class BayarcashClient {
   }
 
   /**
-   * Get all transactions with optional filters
+   * Get all transactions with optional filters and pagination
+   * Returns paginated response with transaction data
    */
   async getAllTransactions(filters?: {
     status?: string;
     payment_channel?: string;
     payer_email?: string;
     order_number?: string;
-    reference_number?: string;
+    exchange_reference_number?: string;
     page?: number;
     per_page?: number;
-  }): Promise<Transaction[]> {
+  }): Promise<any> {
     const response = await this.axiosInstance.get('/transactions', { params: filters });
-    return response.data.data || response.data;
+    return response.data;
   }
 
   /**

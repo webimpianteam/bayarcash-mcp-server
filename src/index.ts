@@ -94,16 +94,16 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       },
       {
         name: 'get_payment_intent',
-        description: 'Get payment intent details and status by payment intent ID or order number. Use this to check payment status.',
+        description: 'Get payment intent details and status by payment intent ID. Returns comprehensive payment history including all attempts.',
         inputSchema: {
           type: 'object',
           properties: {
-            id_or_order_number: {
+            payment_intent_id: {
               type: 'string',
-              description: 'Payment intent ID (e.g., pi_pGwAaq) or order number. Use the ID from create_payment_intent response for status checks.'
+              description: 'Payment intent ID from create_payment_intent response (e.g., pi_pGwAaq, trx_z88ymJ). This is the "id" field.'
             }
           },
-          required: ['id_or_order_number']
+          required: ['payment_intent_id']
         }
       },
       {
@@ -236,7 +236,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       }
 
       case 'get_payment_intent': {
-        const result = await bayarcash.getPaymentIntent(args.id_or_order_number as string);
+        const result = await bayarcash.getPaymentIntent(args.payment_intent_id as string);
         return {
           content: [
             {

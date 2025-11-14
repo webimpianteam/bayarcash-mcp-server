@@ -61,12 +61,12 @@ export default function createServer({ config }: { config: z.infer<typeof config
   // Tool: Get payment intent
   server.tool(
     'get_payment_intent',
-    'Get payment intent details and status by payment intent ID or order number. Use this to check the current status of a payment after it has been created.',
+    'Get payment intent details and status by payment intent ID. Use this to check the current status of a payment after it has been created. Returns comprehensive payment history including all attempts (successful and unsuccessful).',
     {
-      id_or_order_number: z.string().describe('Payment intent ID (e.g., pi_pGwAaq from create_payment_intent response) OR order number (e.g., ORD-001). Payment intent ID is preferred for status checks.')
+      payment_intent_id: z.string().describe('Payment intent ID from create_payment_intent response (e.g., pi_pGwAaq, trx_z88ymJ). This is the "id" field returned when payment was created.')
     },
-    async ({ id_or_order_number }) => {
-      const result = await bayarcash.getPaymentIntent(id_or_order_number);
+    async ({ payment_intent_id }) => {
+      const result = await bayarcash.getPaymentIntent(payment_intent_id);
       return {
         content: [{ type: 'text', text: JSON.stringify(result, null, 2) }]
       };
@@ -106,14 +106,15 @@ export default function createServer({ config }: { config: z.infer<typeof config
   // Tool: List transactions
   server.tool(
     'list_transactions',
-    'List all transactions with optional filters. Returns paginated transaction data.',
+    'List all transactions with optional filters. Returns paginated transaction data including pagination metadata (first, last, previous, next page links).',
     {
       status: z.string().optional().describe('Filter by transaction status. Common values: success, pending, failed'),
       payment_channel: z.string().optional().describe('Filter by payment channel code. Examples: fpx, duitnow, boost, grabpay'),
       payer_email: z.string().email().optional().describe('Filter by exact payer email address'),
       order_number: z.string().optional().describe('Filter by exact order number'),
+      exchange_reference_number: z.string().optional().describe('Filter by exchange reference number'),
       page: z.number().positive().optional().describe('Page number for pagination. Defaults to 1'),
-      per_page: z.number().positive().max(100).optional().describe('Number of items per page. Maximum 100. Defaults to 20')
+      per_page: z.number().positive().max(100).optional().describe('Number of items per page. Default: 15. Maximum: 100')
     },
     async (filters) => {
       const result = await bayarcash.getAllTransactions(filters);
