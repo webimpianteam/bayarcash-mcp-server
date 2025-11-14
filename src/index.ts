@@ -52,7 +52,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
     tools: [
       {
         name: 'create_payment_intent',
-        description: 'Create a new payment intent for processing payments through Bayarcash. Returns payment intent ID in response. WORKFLOW: 1) If user did not provide portal_key, call get_portals first and ask user to select. 2) If user did not specify payment channel, call get_payment_channels and ask user to select. 3) Ask user if they want to provide phone number (optional). IMPORTANT: Store the returned "id" field (e.g., pi_pGwAaq) to check payment status later.',
+        description: 'Create a new payment intent for processing payments through Bayarcash. Returns payment intent ID in response. WORKFLOW: 1) If user did not provide payer_email, call list_transactions (per_page=1) to get latest email and ask: "Use email from last payment: {email}?" 2) If user did not provide portal_key, call get_portals and ask user to select. 3) If user did not specify payment channel, call get_payment_channels and ask user to select. 4) Ask if they want to provide phone number (optional). IMPORTANT: Store the returned "id" field (e.g., pi_pGwAaq) to check payment status later.',
         inputSchema: {
           type: 'object',
           properties: {
@@ -66,7 +66,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
             },
             payer_email: {
               type: 'string',
-              description: 'Email address of the payer'
+              description: 'Email address of the payer. If not provided, get latest transaction email and ask user if they want to use it.'
             },
             payer_name: {
               type: 'string',
