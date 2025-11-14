@@ -79,8 +79,9 @@ Once installed, simply chat with your AI assistant:
 
 ### Create Payments
 ```
-"Create a payment intent for RM 100.50 for order #ORD-001"
-"Generate a payment link for customer john@example.com"
+"First check available payment channels, then create a payment intent for RM 100.50 for order #ORD-001 using FPX"
+"Generate a payment link for customer john@example.com using DuitNow"
+"Create a payment with Boost for RM 50"
 ```
 
 ### Check Transactions

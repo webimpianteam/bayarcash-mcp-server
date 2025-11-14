@@ -30,7 +30,7 @@ export default function createServer({ config }: { config: z.infer<typeof config
   // Tool: Create payment intent
   server.tool(
     'create_payment_intent',
-    'Create a new payment intent for processing payments through Bayarcash. Returns payment URL and order details.',
+    'Create a new payment intent for processing payments through Bayarcash. Returns payment URL and order details. Defaults to FPX (online banking) if no payment channel is specified.',
     {
       order_number: z.string().describe('Unique order number for this payment. Must be unique across all transactions. Example: ORD-001'),
       amount: z.number().positive().describe('Payment amount in Malaysian Ringgit (MYR). Must be positive. Example: 100.50 for RM100.50'),
@@ -38,9 +38,10 @@ export default function createServer({ config }: { config: z.infer<typeof config
       payer_name: z.string().min(1).describe('Full name of the payer. Required for transaction records.'),
       description: z.string().min(1).describe('Description of what the payment is for. Shown to customer during payment.'),
       portal_key: z.string().describe('Portal key from your Bayarcash account. Identifies which payment portal to use.'),
+      payment_channel: z.string().default('fpx').optional().describe('Payment channel code. Defaults to "fpx" (Online Banking). Other options: duitnow, boost, grabpay, tng, shopeepay. Use get_payment_channels to see all available channels.'),
       payment_optional: z.boolean().optional().describe('Set to true if payment amount can be changed by customer. Defaults to false.')
     },
-    async ({ order_number, amount, payer_email, payer_name, description, portal_key, payment_optional }) => {
+    async ({ order_number, amount, payer_email, payer_name, description, portal_key, payment_channel, payment_optional }) => {
       const result = await bayarcash.createPaymentIntent({
         order_number,
         amount,
@@ -48,6 +49,7 @@ export default function createServer({ config }: { config: z.infer<typeof config
         payer_name,
         description,
         portal_key,
+        payment_channel,
         payment_optional
       });
       return {
@@ -263,7 +265,7 @@ export default function createServer({ config }: { config: z.infer<typeof config
           role: 'user',
           content: {
             type: 'text',
-            text: 'Create a test payment intent for RM 10.00 in sandbox mode. Use order number TEST-001, email test@example.com, name Test User, and description "Test payment".'
+            text: 'First check my available payment portals and channels. Then create a test payment intent for RM 10.00 using FPX payment channel. Use order number TEST-001, email test@example.com, name Test User, and description "Test payment".'
           }
         }]
       };

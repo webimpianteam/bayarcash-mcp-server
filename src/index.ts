@@ -80,6 +80,10 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
               type: 'string',
               description: 'Portal key for the payment gateway'
             },
+            payment_channel: {
+              type: 'string',
+              description: 'Payment channel code (e.g., fpx, duitnow, boost, grabpay). HIGHLY RECOMMENDED. If not provided, ask user to choose from available channels using get_payment_channels.'
+            },
             payment_optional: {
               type: 'boolean',
               description: 'Whether payment is optional'
@@ -270,6 +274,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           payer_name: args.payer_name as string,
           description: args.description as string,
           portal_key: args.portal_key as string,
+          payment_channel: args.payment_channel as string | undefined,
           payment_optional: args.payment_optional as boolean | undefined
         });
         return {
