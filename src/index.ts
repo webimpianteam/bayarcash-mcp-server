@@ -52,7 +52,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
     tools: [
       {
         name: 'create_payment_intent',
-        description: 'Create a new payment intent for processing payments through Bayarcash',
+        description: 'Create a new payment intent for processing payments through Bayarcash. WORKFLOW: 1) Call get_portals and ask user to select portal (by number), 2) Call get_payment_channels and ask user to select channel (by number). Then create payment.',
         inputSchema: {
           type: 'object',
           properties: {
@@ -78,11 +78,11 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
             },
             portal_key: {
               type: 'string',
-              description: 'Portal key for the payment gateway'
+              description: 'Portal key selected by user from get_portals list'
             },
             payment_channel: {
               type: 'number',
-              description: 'Payment channel ID (integer). Use get_payment_channels to see available IDs. Defaults to 1 (FPX) if not provided.'
+              description: 'Payment channel ID selected by user from get_payment_channels list. Examples: 1=FPX, 2=DuitNow, 3=Boost, 4=GrabPay.'
             },
             payer_telephone_number: {
               type: 'number',

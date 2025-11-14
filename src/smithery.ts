@@ -30,15 +30,15 @@ export default function createServer({ config }: { config: z.infer<typeof config
   // Tool: Create payment intent
   server.tool(
     'create_payment_intent',
-    'Create a new payment intent for processing payments through Bayarcash. Returns payment URL and order details. Defaults to channel ID 1 (FPX online banking) if not specified.',
+    'Create a new payment intent for processing payments through Bayarcash. Returns payment URL and order details. IMPORTANT WORKFLOW: 1) First call get_portals to show available portals and ask user which portal to use (user can select by number/index), 2) Then call get_payment_channels to show available payment channels and ask user which channel to use (user can select by number/index). Only proceed after user has selected both portal and payment channel.',
     {
       order_number: z.string().describe('Unique order number for this payment. Must be unique across all transactions. Example: ORD-001'),
       amount: z.number().positive().describe('Payment amount in Malaysian Ringgit (MYR). Must be positive. Example: 100.50 for RM100.50'),
       payer_email: z.string().email().describe('Valid email address of the payer. Used for payment notifications.'),
       payer_name: z.string().min(1).describe('Full name of the payer. Required for transaction records.'),
       description: z.string().min(1).describe('Description of what the payment is for. Shown to customer during payment.'),
-      portal_key: z.string().describe('Portal key from your Bayarcash account. Identifies which payment portal to use.'),
-      payment_channel: z.number().int().positive().default(1).optional().describe('Payment channel ID (integer). Defaults to 1 (FPX - Online Banking). Use get_payment_channels to see all available channel IDs and names.'),
+      portal_key: z.string().describe('Portal key from the portal selected by user. Get this from get_portals API call.'),
+      payment_channel: z.number().int().positive().default(1).optional().describe('Payment channel ID (integer). Get this from user selection after showing get_payment_channels list. Examples: 1=FPX, 2=DuitNow, 3=Boost, 4=GrabPay, 5=TNG, 6=ShopeePay.'),
       payer_telephone_number: z.number().int().positive().optional().describe('Payer phone number (integer, Malaysia numbers only). Optional. Example: 60123456789 for +60 12-345 6789')
     },
     async ({ order_number, amount, payer_email, payer_name, description, portal_key, payment_channel, payer_telephone_number }) => {
