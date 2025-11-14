@@ -149,7 +149,7 @@ export class BayarcashClient {
    * Returns paginated response with transaction data
    */
   async getAllTransactions(filters?: {
-    status?: string;
+    status?: number;
     payment_channel?: number;
     payer_email?: string;
     order_number?: string;
@@ -178,8 +178,9 @@ export class BayarcashClient {
 
   /**
    * Get transactions by status
+   * @param status Status code: 0=New, 1=Pending, 2=Failed, 3=Success, 4=Cancelled
    */
-  async getTransactionsByStatus(status: string): Promise<Transaction[]> {
+  async getTransactionsByStatus(status: number): Promise<Transaction[]> {
     return this.getAllTransactions({ status });
   }
 

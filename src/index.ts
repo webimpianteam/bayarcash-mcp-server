@@ -141,8 +141,8 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
           type: 'object',
           properties: {
             status: {
-              type: 'string',
-              description: 'Filter by transaction status (e.g., success, pending, failed)'
+              type: 'number',
+              description: 'Filter by transaction status code (integer). Status codes: 0=New, 1=Pending, 2=Failed, 3=Success, 4=Cancelled. Example: Use 3 for successful transactions, not "success".'
             },
             payment_channel: {
               type: 'number',

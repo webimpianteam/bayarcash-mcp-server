@@ -98,6 +98,16 @@ When you use list_transactions after creating a payment, the AI will ask:
 "Would you like to filter by the email from your last payment: customer@example.com?"
 ```
 
+**Filter by status code:**
+Use status code (integer) not status string:
+- 0 = New
+- 1 = Pending
+- 2 = Failed
+- 3 = Success
+- 4 = Cancelled
+
+Example: Use `status: 3` for successful transactions (not "success")
+
 **Filter by payment channel:**
 Use channel ID (number) not channel code (string):
 - Filter by FPX: use `payment_channel: 1` (not "fpx")
@@ -214,16 +224,19 @@ portal: my_portal_key, channel: 1"
 ```
 AI asks: "Filter by email from last payment: customer@example.com?"
 
-**Filter by status:**
+**Filter by status (uses status codes):**
 ```
-"List all successful transactions"
-"Show pending payments"
+"List all successful transactions" (AI uses status: 3)
+"Show pending payments" (AI uses status: 1)
+"Show failed transactions" (AI uses status: 2)
 ```
 
-**Filter by payment channel:**
+Status codes: 0=New, 1=Pending, 2=Failed, 3=Success, 4=Cancelled
+
+**Filter by payment channel (uses channel IDs):**
 ```
-"List all FPX transactions"
-"Show all e-wallet payments"
+"List all FPX transactions" (AI uses payment_channel: 1)
+"Show all e-wallet payments" (AI filters by channels 3-6)
 ```
 
 **Filter by customer:**
@@ -235,11 +248,12 @@ AI asks: "Filter by email from last payment: customer@example.com?"
 
 1. **Use simple prompts** - Let the AI guide you through the workflow with "Create a payment for RM 100"
 2. **Payment intent ID is stored** - After creating payment, just say "Check status of that payment"
-3. **Payment channels by ID** - Remember: 1=FPX, 2=DuitNow, 3=Boost, 4=GrabPay, 5=TNG, 6=ShopeePay, etc.
-4. **Always use unique order numbers** - Order numbers must be unique for each transaction
-5. **Amounts in MYR** - All amounts are in Malaysian Ringgit (e.g., 100.50 for RM 100.50)
-6. **Sandbox mode** - Use sandbox mode for testing before going live
-7. **Smart filtering** - The AI remembers your last payment email for easy filtering
+3. **Status codes** - Remember: 0=New, 1=Pending, 2=Failed, 3=Success, 4=Cancelled (AI handles conversion)
+4. **Payment channels by ID** - Remember: 1=FPX, 2=DuitNow, 3=Boost, 4=GrabPay, 5=TNG, 6=ShopeePay, etc.
+5. **Always use unique order numbers** - Order numbers must be unique for each transaction
+6. **Amounts in MYR** - All amounts are in Malaysian Ringgit (e.g., 100.50 for RM 100.50)
+7. **Sandbox mode** - Use sandbox mode for testing before going live
+8. **Smart filtering** - The AI remembers your last payment email for easy filtering
 
 ## Error Handling
 
