@@ -102,19 +102,23 @@ The AI will ask: "Filter by email from last payment: test@example.com?"
 - ✅ Auto-suggests filtering by last payment email
 - ✅ Stores payment intent ID for quick status checks
 - ✅ Sandbox & production environments
-- ✅ API v3 support
+- ✅ API v3 support (always latest version)
 - ✅ Paginated transaction lists with filters
+- ✅ Input validation (email, phone, amount)
+- ✅ Comprehensive error handling
+- ✅ Full TypeScript type safety
 
 ## Configuration
 
 **Environment Variables:**
 
-| Variable | Required | Default |
-|----------|----------|---------|
-| `BAYARCASH_API_TOKEN` | Yes | - |
-| `BAYARCASH_API_SECRET_KEY` | Yes | - |
-| `BAYARCASH_SANDBOX` | No | `true` |
-| `BAYARCASH_API_VERSION` | No | `v3` |
+| Variable | Required | Default | Description |
+|----------|----------|---------|-------------|
+| `BAYARCASH_API_TOKEN` | Yes | - | Your API token from console.bayar.cash |
+| `BAYARCASH_API_SECRET_KEY` | Yes | - | Your API secret key |
+| `BAYARCASH_SANDBOX` | No | `true` | Use sandbox (true) or production (false) |
+
+**Note:** Server always uses API v3 (latest version). No need to specify version.
 
 ## Use Cases
 
@@ -147,10 +151,17 @@ For more detailed examples and workflows, see **[USAGE.md](USAGE.md)**.
 - Verify no extra spaces in API token/secret
 - Try regenerating credentials
 
-**Getting HTTP 500 errors?**
-- Make sure `payment_channel` is specified when creating payments
+**Validation errors?**
+- Email must be valid format
+- Phone numbers must be Malaysian format: 60123456789 (starts with 60)
+- Amount must be positive with max 2 decimal places
+- Payment channel must be 1-10
+- Status codes must be 0-4
+
+**Getting API errors?**
+- The server provides detailed error messages for debugging
+- Check the error message for specific validation failures
 - Use `get_payment_channels` to see available options
-- FPX is the default if no channel specified
 
 ## Links
 

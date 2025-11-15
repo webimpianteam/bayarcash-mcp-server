@@ -10,13 +10,21 @@ import {
   ErrorCode,
   McpError
 } from '@modelcontextprotocol/sdk/types.js';
-import { BayarcashClient, BayarcashConfig } from './bayarcash-client.js';
+import { BayarcashClient, BayarcashConfig, BayarcashError } from './bayarcash-client.js';
+import {
+  validateInput,
+  createPaymentIntentSchema,
+  listTransactionsSchema,
+  paymentIntentIdSchema,
+  transactionIdSchema,
+  orderNumberSchema,
+  portalKeySchema
+} from './validation.js';
 
 // Get configuration from environment variables
 const API_TOKEN = process.env.BAYARCASH_API_TOKEN;
 const API_SECRET_KEY = process.env.BAYARCASH_API_SECRET_KEY;
 const USE_SANDBOX = process.env.BAYARCASH_SANDBOX !== 'false';
-const API_VERSION = (process.env.BAYARCASH_API_VERSION as 'v2' | 'v3') || 'v3';
 
 if (!API_TOKEN || !API_SECRET_KEY) {
   console.error('Error: BAYARCASH_API_TOKEN and BAYARCASH_API_SECRET_KEY environment variables are required');
@@ -26,8 +34,7 @@ if (!API_TOKEN || !API_SECRET_KEY) {
 const bayarcashConfig: BayarcashConfig = {
   apiToken: API_TOKEN,
   apiSecretKey: API_SECRET_KEY,
-  useSandbox: USE_SANDBOX,
-  apiVersion: API_VERSION
+  useSandbox: USE_SANDBOX
 };
 
 const bayarcash = new BayarcashClient(bayarcashConfig);
@@ -215,16 +222,13 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
     switch (name) {
       case 'create_payment_intent': {
-        const result = await bayarcash.createPaymentIntent({
-          order_number: args.order_number as string,
-          amount: args.amount as number,
-          payer_email: args.payer_email as string,
-          payer_name: args.payer_name as string,
-          description: args.description as string,
-          portal_key: args.portal_key as string,
-          payment_channel: args.payment_channel as number | undefined,
-          payer_telephone_number: args.payer_telephone_number as number | undefined
-        });
+        // Validate input
+        const validation = validateInput(createPaymentIntentSchema, args);
+        if (!validation.success) {
+          throw new McpError(ErrorCode.InvalidParams, `Validation error: ${validation.error}`);
+        }
+
+        const result = await bayarcash.createPaymentIntent(validation.data);
         return {
           content: [
             {
@@ -236,7 +240,13 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       }
 
       case 'get_payment_intent': {
-        const result = await bayarcash.getPaymentIntent(args.payment_intent_id as string);
+        // Validate input
+        const validation = validateInput(paymentIntentIdSchema, args);
+        if (!validation.success) {
+          throw new McpError(ErrorCode.InvalidParams, `Validation error: ${validation.error}`);
+        }
+
+        const result = await bayarcash.getPaymentIntent(validation.data.payment_intent_id);
         return {
           content: [
             {
@@ -248,7 +258,13 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       }
 
       case 'get_transaction': {
-        const result = await bayarcash.getTransaction(args.transaction_id as string);
+        // Validate input
+        const validation = validateInput(transactionIdSchema, args);
+        if (!validation.success) {
+          throw new McpError(ErrorCode.InvalidParams, `Validation error: ${validation.error}`);
+        }
+
+        const result = await bayarcash.getTransaction(validation.data.transaction_id);
         return {
           content: [
             {
@@ -260,7 +276,13 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       }
 
       case 'get_transaction_by_order': {
-        const result = await bayarcash.getTransactionByOrderNumber(args.order_number as string);
+        // Validate input
+        const validation = validateInput(orderNumberSchema, args);
+        if (!validation.success) {
+          throw new McpError(ErrorCode.InvalidParams, `Validation error: ${validation.error}`);
+        }
+
+        const result = await bayarcash.getTransactionByOrderNumber(validation.data.order_number);
         return {
           content: [
             {
@@ -272,7 +294,13 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       }
 
       case 'list_transactions': {
-        const result = await bayarcash.getAllTransactions(args as any);
+        // Validate input
+        const validation = validateInput(listTransactionsSchema, args);
+        if (!validation.success) {
+          throw new McpError(ErrorCode.InvalidParams, `Validation error: ${validation.error}`);
+        }
+
+        const result = await bayarcash.getAllTransactions(validation.data);
         return {
           content: [
             {
@@ -296,7 +324,13 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       }
 
       case 'get_payment_channels': {
-        const result = await bayarcash.getChannels(args.portal_key as string | undefined);
+        // Validate input
+        const validation = validateInput(portalKeySchema, args);
+        if (!validation.success) {
+          throw new McpError(ErrorCode.InvalidParams, `Validation error: ${validation.error}`);
+        }
+
+        const result = await bayarcash.getChannels(validation.data.portal_key);
         return {
           content: [
             {
@@ -325,11 +359,26 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           `Unknown tool: ${name}`
         );
     }
-  } catch (error: any) {
-    throw new McpError(
-      ErrorCode.InternalError,
-      `Error executing tool: ${error.message}`
-    );
+  } catch (error: unknown) {
+    // Handle BayarcashError with more context
+    if (error instanceof BayarcashError) {
+      const errorMsg = error.statusCode
+        ? `Bayarcash API Error (${error.statusCode}): ${error.message}`
+        : `Bayarcash Error: ${error.message}`;
+      throw new McpError(ErrorCode.InternalError, errorMsg);
+    }
+
+    // Handle McpError (pass through)
+    if (error instanceof McpError) {
+      throw error;
+    }
+
+    // Handle generic errors
+    if (error instanceof Error) {
+      throw new McpError(ErrorCode.InternalError, `Error executing tool: ${error.message}`);
+    }
+
+    throw new McpError(ErrorCode.InternalError, 'Unknown error occurred');
   }
 });
 

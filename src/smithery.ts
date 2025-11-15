@@ -6,17 +6,15 @@ import { BayarcashClient, BayarcashConfig } from './bayarcash-client.js';
 export const configSchema = z.object({
   apiToken: z.string().describe('Your Bayarcash API Token from console.bayar.cash. Required for authentication.'),
   apiSecretKey: z.string().describe('Your Bayarcash API Secret Key. Used for checksum generation and webhook verification.'),
-  useSandbox: z.boolean().default(true).optional().describe('Enable sandbox mode for testing. Defaults to true. Set to false for production.'),
-  apiVersion: z.enum(['v2', 'v3']).default('v3').optional().describe('Bayarcash API version. v3 is recommended for new integrations.')
+  useSandbox: z.boolean().default(true).optional().describe('Enable sandbox mode for testing. Defaults to true. Set to false for production.')
 });
 
 export default function createServer({ config }: { config: z.infer<typeof configSchema> }) {
-  // Initialize Bayarcash client
+  // Initialize Bayarcash client (always uses API v3)
   const bayarcashConfig: BayarcashConfig = {
     apiToken: config.apiToken,
     apiSecretKey: config.apiSecretKey,
-    useSandbox: config.useSandbox,
-    apiVersion: config.apiVersion
+    useSandbox: config.useSandbox
   };
 
   const bayarcash = new BayarcashClient(bayarcashConfig);

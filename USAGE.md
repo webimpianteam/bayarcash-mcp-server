@@ -255,15 +255,67 @@ Status codes: 0=New, 1=Pending, 2=Failed, 3=Success, 4=Cancelled
 7. **Sandbox mode** - Use sandbox mode for testing before going live
 8. **Smart filtering** - The AI remembers your last payment email for easy filtering
 
+## Input Validation
+
+The server automatically validates all inputs before sending to the API:
+
+**Email Validation:**
+- Must be valid email format
+- Example: `customer@example.com` ✅
+- Example: `invalid-email` ❌
+
+**Phone Number Validation:**
+- Must be Malaysian format: starts with 60
+- Length: 11-12 digits
+- Example: `60123456789` ✅
+- Example: `0123456789` ❌ (must start with 60)
+- Example: `123456789` ❌ (too short)
+
+**Amount Validation:**
+- Must be positive number
+- Maximum 2 decimal places
+- Example: `100.50` ✅
+- Example: `100.555` ❌ (too many decimals)
+- Example: `-50` ❌ (negative)
+
+**Payment Channel Validation:**
+- Must be integer between 1-10
+- Example: `1` (FPX) ✅
+- Example: `15` ❌ (out of range)
+
+**Status Code Validation:**
+- Must be integer between 0-4
+- 0=New, 1=Pending, 2=Failed, 3=Success, 4=Cancelled
+- Example: `3` (Success) ✅
+- Example: `5` ❌ (invalid)
+
 ## Error Handling
 
-If you encounter errors:
+The server provides clear error messages for validation and API errors:
+
+**Validation Errors:**
+```
+Validation error: payer_email: Invalid email format
+Validation error: payer_telephone_number: Invalid Malaysian phone number. Format: 60123456789
+Validation error: amount: Amount can have maximum 2 decimal places
+```
+
+**API Errors:**
+```
+Bayarcash API Error (401): Authentication failed. Check your API token and secret key.
+Bayarcash API Error (404): Resource not found.
+Bayarcash API Error (422): Validation error. Check your request parameters.
+Bayarcash API Error (500): Bayarcash server error. Please try again later.
+```
+
+**Common Issues:**
 
 1. **API credentials** - Verify your API token and secret key are correct
 2. **Portal key** - Ensure the portal key exists and is active
 3. **Amount format** - Use numeric values (e.g., 100.50, not "RM 100.50")
 4. **Email format** - Ensure email addresses are valid
-5. **Order numbers** - Check for duplicate order numbers
+5. **Phone format** - Must start with 60 for Malaysian numbers
+6. **Order numbers** - Check for duplicate order numbers
 
 ## Support
 
