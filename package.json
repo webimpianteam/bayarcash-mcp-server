@@ -36,12 +36,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/khairulimran-97/bayarcash-mcp-server.git"
+    "url": "https://github.com/webimpianteam/bayarcash-mcp-server.git"
   },
   "bugs": {
-    "url": "https://github.com/khairulimran-97/bayarcash-mcp-server/issues"
+    "url": "https://github.com/webimpianteam/bayarcash-mcp-server/issues"
   },
-  "homepage": "https://github.com/khairulimran-97/bayarcash-mcp-server#readme",
+  "homepage": "https://github.com/webimpianteam/bayarcash-mcp-server#readme",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.4",
     "@smithery/sdk": "^1.7.4",

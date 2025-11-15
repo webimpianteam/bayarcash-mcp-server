@@ -2,7 +2,7 @@
 
 Use AI to manage Bayarcash payments. Create payment links, check transactions, and integrate payment processing using natural language.
 
-[![smithery badge](https://smithery.ai/badge/@khairulimran-97/bayarcash-mcp-server)](https://smithery.ai/server/@khairulimran-97/bayarcash-mcp-server)
+[![smithery badge](https://smithery.ai/badge/@webimpian/bayarcash-mcp-server)](https://smithery.ai/server/@webimpian/bayarcash-mcp-server)
 [![npm version](https://badge.fury.io/js/@webimpian%2Fbayarcash-mcp-server.svg)](https://www.npmjs.com/package/@webimpian/bayarcash-mcp-server)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -10,7 +10,7 @@ Use AI to manage Bayarcash payments. Create payment links, check transactions, a
 
 **Smithery (Easiest):**
 ```bash
-npx -y @smithery/cli install @khairulimran-97/bayarcash-mcp-server --client claude
+npx -y @smithery/cli install @webimpian/bayarcash-mcp-server --client claude
 ```
 
 **Manual Setup:**
@@ -165,11 +165,11 @@ For more detailed examples and workflows, see **[USAGE.md](USAGE.md)**.
 
 ## Links
 
-- **Smithery Marketplace:** https://smithery.ai/server/@khairulimran-97/bayarcash-mcp-server
-- **Repository:** https://github.com/khairulimran-97/bayarcash-mcp-server
+- **Smithery Marketplace:** https://smithery.ai/server/@webimpian/bayarcash-mcp-server
+- **Repository:** https://github.com/webimpianteam/bayarcash-mcp-server
 - **Bayarcash:** https://bayar.cash
 - **MCP Docs:** https://modelcontextprotocol.io
-- **Issues:** https://github.com/khairulimran-97/bayarcash-mcp-server/issues
+- **Issues:** https://github.com/webimpianteam/bayarcash-mcp-server/issues
 
 ## License
 

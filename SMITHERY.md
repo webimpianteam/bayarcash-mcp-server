@@ -7,19 +7,19 @@ Once published, installation is super easy:
 ### Install to Claude Desktop
 
 ```bash
-npx -y @smithery/cli install @khairulimran-97/bayarcash-mcp-server --client claude
+npx -y @smithery/cli install @webimpian/bayarcash-mcp-server --client claude
 ```
 
 ### Install to Claude Code
 
 ```bash
-npx -y @smithery/cli install @khairulimran-97/bayarcash-mcp-server --client claude-code
+npx -y @smithery/cli install @webimpian/bayarcash-mcp-server --client claude-code
 ```
 
 ### Install to Cursor
 
 ```bash
-npx -y @smithery/cli install @khairulimran-97/bayarcash-mcp-server --client cursor
+npx -y @smithery/cli install @webimpian/bayarcash-mcp-server --client cursor
 ```
 
 Smithery will:
@@ -98,7 +98,7 @@ This creates a nice UI for users to enter their credentials!
 ## After Publishing
 
 Your server will appear on:
-- https://smithery.ai/server/@khairulimran-97/bayarcash-mcp-server
+- https://smithery.ai/server/@webimpian/bayarcash-mcp-server
 - Smithery marketplace
 - Search results in Smithery CLI
 
@@ -130,5 +130,5 @@ Users can discover and install with one command!
 ## Support
 
 - **Smithery Docs:** https://smithery.ai/docs
-- **GitHub Issues:** https://github.com/khairulimran-97/bayarcash-mcp-server/issues
+- **GitHub Issues:** https://github.com/webimpianteam/bayarcash-mcp-server/issues
 - **Bayarcash Support:** https://bayar.cash
