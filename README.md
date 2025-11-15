@@ -11,7 +11,7 @@ Use AI to manage Bayarcash payments. Create payment links, check transactions, a
 
 **Smithery (Easiest):**
 ```bash
-npx -y @smithery/cli install @webimpian/bayarcash-mcp-server --client claude
+npx -y @smithery/cli install @webimpianteam/bayarcash-mcp-server --client claude
 ```
 
 **Manual Setup:**
@@ -166,7 +166,7 @@ For more detailed examples and workflows, see **[USAGE.md](USAGE.md)**.
 
 ## Links
 
-- **Smithery Marketplace:** https://smithery.ai/server/@webimpian/bayarcash-mcp-server
+- **Smithery Marketplace:** https://smithery.ai/server/@webimpianteam/bayarcash-mcp-server
 - **Repository:** https://github.com/webimpianteam/bayarcash-mcp-server
 - **Bayarcash:** https://bayar.cash
 - **MCP Docs:** https://modelcontextprotocol.io
